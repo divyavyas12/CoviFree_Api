@@ -1,0 +1,27 @@
+users 
+{
+_id:
+mobileNo:
+otp:
+verified:
+userDetails: {
+    name:
+    email:
+    aadhar:
+    address:
+    }
+}
+
+places
+{
+    _id:
+    mobileNo:
+    otp:
+    verified:
+    placeDetails: {
+        name:
+        email:
+        placePicture:
+        address:
+    }
+}
