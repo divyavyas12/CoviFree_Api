@@ -1,6 +1,9 @@
 const express = require('express')
 const Travel = require('../models/travelhistory')
+const Place = require('../models/place')
+const User = require('../models/user')
 const { ObjectId } = require('bson')
+const { db } = require('../models/place')
 
 const router = new express.Router()
 
@@ -28,7 +31,7 @@ router.post('/updateHistory' ,(req,res)=>{
                         status:"Something went wrong"
                     })
                 })
-              
+             //JSONException: Value <!DOCTYPE of type java.lang.String cannot be converted to JSONObject 
 
  })
 
@@ -39,7 +42,44 @@ router.post('/updateHistory' ,(req,res)=>{
  
     Travel.find({}).then((travel)=>{
 
-        res.send(travel)
+        values = []
+        count = 0
+        travel.forEach(element => {
+            placeName = ''
+            userMobile = ''
+            var promises = [];
+            promises.push(Place.find({_id : ObjectId(element.placeId)}).lean().exec());
+            promises.push(User.find({_id : ObjectId(element.userId)}).lean().exec());
+
+            Promise.all(promises).then(results=>{
+                console.log(results)
+                // results[0] will have docs of first query
+                // results[1] will have docs of second query
+                // and so on...
+
+                value = {
+                    placeName:'hii'
+                }
+
+                console.log(value)
+
+                values.push(value)
+            
+                // you can combine all the results here and send back in response
+                if (values.length == travel.length) {
+                    res.status(200).json({
+                        status: 200,
+                        values: values,
+                    })
+                }
+            }).catch(err=>{
+                //handle error here
+            })
+                    
+        });
+
+      
+
 
     }).catch((e)=>{
 
@@ -48,8 +88,6 @@ router.post('/updateHistory' ,(req,res)=>{
     })
 
 })
- 
-
 
 
 module.exports = router

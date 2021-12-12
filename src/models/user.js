@@ -22,6 +22,12 @@ UserSchema = new mongoose.Schema({
 
    UserDetails:{
 
+    status:{
+        type:String,
+        default:"Negative"
+
+    },
+
     name:{
         type:String,
         trim:true

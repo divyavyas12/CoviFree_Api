@@ -25,3 +25,13 @@ places
         address:
     }
 }
+
+address
+{
+    _id:
+    addressLine:
+    city:
+    country:
+    state:
+    postalCode:
+}

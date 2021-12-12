@@ -1,19 +1,28 @@
 const express = require('express')
 const User = require('../models/user')
 const jwt = require('jsonwebtoken')
+const fs = require('fs');
 const { ObjectId } = require('bson')
 const router = new express.Router()
+
+function base64_decode(base64Image, file) {
+    fs.writeFileSync(file,base64Image);
+     console.log('******** File created from base64 encoded string ********');
+  
+  }
 
 router.post('/register' ,(req,res)=>{
 
     const obj = req.body
+    base64_decode(obj.aadhar, obj.userId+'.jpeg')
 
     User.updateOne( {_id: new ObjectId(obj.userId)}, 
         {$set: 
             {UserDetails: 
                 {
+                    status: 'negative',
                     name: obj.name, 
-                    email: obj.email, 
+                    email: obj.email,
                     aadhar: obj.aadhar, 
                     address: obj.address
                 }
@@ -37,7 +46,7 @@ router.post('/register' ,(req,res)=>{
     //         status:'success',
     //         message:'successfully registered'
 
-
+//heloooooooooooo
     //     })
        
  
@@ -163,6 +172,50 @@ router.post('/verify' ,(req,res)=>{
     })
    })
  })
+
+
+ router.post('/covidstatus',(req,res,next)=>{
+
+    const obj = req.body
+    User.find({
+        userId: obj.userId
+    }).exec().then(user=>{
+
+        User.updateOne( 
+        {$set: 
+            {'UserDetails.status':obj.status 
+                   
+            }
+        }, function(err, doc) {
+            console.log(err)
+            console.log(doc);
+            res.status(200).json({
+                        code:200,
+                        status:'success',
+                        message:'covid status successfully updated'
+            
+            })
+        }
+    );
+
+    })
+ })
+
+
+
+ router.post('/profile',(req,res)=>{
+    const obj = req.body.userId
+    User.findById(obj).then((user)=>{
+        if(!user){
+            return res.status(201).send()
+        }
+        res.send(user)
+    }).catch((e)=>{
+        res.status(200).send()
+    })
+})
+
+
 
 
 
